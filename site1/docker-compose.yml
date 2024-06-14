@@ -13,9 +13,9 @@ services:
       - "traefik.http.routers.site_1.rule=Host(`app1.localhost`)"
       - "traefik.http.services.site_1.loadbalancer.server.port=80"
     networks:
-      - app-network
+      - traefik-network
     env_file:
       - ".env"
 networks:
-  app-network:
+  traefik-network:
     external: true
