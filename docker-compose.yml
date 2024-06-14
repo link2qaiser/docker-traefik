@@ -16,7 +16,7 @@ services:
       - "8080:8080"
     labels:
       - "traefik.http.middlewares.my-auth.basicauth.users=${DASHBOARD_LOGIN}"
-      - "traefik.http.routers.dashboard.rule=Host(`dashboard.localhost`)"
+      - "traefik.http.routers.dashboard.rule=Host(`${DASHBOARD_URL}`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=my-auth"
     volumes:
