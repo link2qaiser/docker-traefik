@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: site_1
+    working_dir: /var/www/html/
+    volumes:
+      - ./:/var/www/html/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.site_1.rule=Host(`app1.localhost`)"
+      - "traefik.http.services.site_1.loadbalancer.server.port=80"
+    networks:
+      - app-network
+    env_file:
+      - ".env"
+networks:
+  app-network:
+    external: true

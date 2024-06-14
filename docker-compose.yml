@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    command:
+      - "--api.insecure=false"
+      - "--providers.docker"
+      - "--api.dashboard=true"
+      - "--entrypoints.web.address=:80"
+    networks:
+      - app-network
+    ports:
+      - "80:80"
+      - "8080:8080"
+    labels:
+      - "traefik.http.middlewares.my-auth.basicauth.users=${DASHBOARD_LOGIN}"
+      - "traefik.http.routers.dashboard.rule=Host(`dashboard.localhost`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=my-auth"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  app-network:
+    external: true
