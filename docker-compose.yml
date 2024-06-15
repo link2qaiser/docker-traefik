@@ -9,19 +9,25 @@ services:
       - "--providers.docker"
       - "--api.dashboard=true"
       - "--entrypoints.web.address=:80"
+    environment:
+      - TRAEFIK_USER=${TRAEFIK_USER}
+      - TRAEFIK_PASSWORD_HASH=${TRAEFIK_PASSWORD_HASH}
+      - DASHBOARD_URL=${DASHBOARD_URL}
     networks:
-      - traefik-network
+      - app-network
     ports:
       - "80:80"
       - "8080:8080"
     labels:
-      - "traefik.http.middlewares.my-auth.basicauth.users=${DASHBOARD_LOGIN}"
+      - "traefik.http.middlewares.my-auth.basicauth.users=dixeam:$$2y$$05$$iWFBhgu3niqeckpfWh55wOv4s39e3sxHw0iQevkmuOEM7tDItxI9S"
       - "traefik.http.routers.dashboard.rule=Host(`${DASHBOARD_URL}`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=my-auth"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - '.env'
 
 networks:
-  traefik-network:
+  app-network:
     external: true
